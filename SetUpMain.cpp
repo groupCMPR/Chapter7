@@ -1,8 +1,9 @@
 //Names: Alexis Martinez, Angie Campos, Neidy Malaga, & Vivian Huynh
 //Date: 10/4/2023
-//Description: Chapter 7 Assignments - Stack
+//Description: Chapter 7 Assignments - Applications using Stacks
 
 #include <iostream> //For cout
+#include <iomanip>  //For formatting output
 
 //HEADER FILES
 #include "input.h" //For input validation
@@ -11,13 +12,13 @@ using namespace std;
 //PROTOTYPES
 int mainMenu();
 
-//Option 1 - 
+//Option 1 - Simple Calculator
 void option1();
 
-//Option 2 - 
+//Option 2 - Translation of arithmetic expression
 void option2();
 
-//Option 3 - 
+//Option 3 - n-Queens Problem
 void option3();
 
 //Precondition : N/A
@@ -46,14 +47,42 @@ int main()
 //Posctondition: Returns integer choice
 int mainMenu()
 {
-	cout << "\n\tCMPR131 Chapter 7: Stacks by Group 5 () 10/12/2023";
+	cout << "\n\tCMPR131 Chapter 7: Applications using Stacks by Group 5 () 10/12/2023";
 	cout << "\n\t" << string(100, char(205));
-	cout << "\n\t\t1>";
-	cout << "\n\t\t2>";
-	cout << "\n\t\t3>";
+	cout << "\n\t\t1> Simple Calculator (problem 9, pg 391)";
+	cout << "\n\t\t2> Translation of arithmetic expression(problem 10, pg 391)";
+	cout << "\n\t\t3> n-Queens Problem(problem 11, pg 391-292)";
 	cout << "\n\t" << string(100, char(196));
 	cout << "\n\t\t0. Exit";
 	cout << "\n\t" << string(100, char(205));
 
 	return inputInteger("\n\t\tOption: ", 0, 3);
+}
+
+void option1()
+{
+	string arithExpression = "";
+	double sum = 0.0;
+	cout << "\n\t1> Simple Calculator";
+	cout << "\n\t" << string(100, char(196));
+	cout << "\n\tType a fully parenthesized arithmetic expression: ";
+	cout << "\n\tIt evaluates to " << sum << ".\n";
+}
+
+void option2()
+{
+	cout << "\n\t2> Translation of Arithmetic Expression";
+	cout << "\n\t" << string(100, char(196));
+	cout << "\n\tInfix expression: )a + b * (c^d - e)^(f + g * h) - i";
+	cout << "\n\tPostfix expression: "; //ERROR: inbalanced parentheses
+}
+
+void option3()
+{
+	cout << "\n\t3> n-Queens Problem";
+	int numberOfQueens = 0;
+	numberOfQueens = inputInteger("\n\tEnter a number(1...100) of queens: ", 1, 100);
+	
+	int column = 0;
+	column = inputInteger("\n\tEnter the column(1.." + to_string(numberOfQueens) + ") to place the first queen : ", 1, numberOfQueens);
 }
