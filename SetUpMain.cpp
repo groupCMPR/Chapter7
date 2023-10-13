@@ -66,6 +66,8 @@ void option1()
 	cout << "\n\t1> Simple Calculator";
 	cout << "\n\t" << string(100, char(196));
 	cout << "\n\tType a fully parenthesized arithmetic expression: ";
+	//cout << "\n\tERROR: Parentheses don't match.\n";
+	//cout << "\n\tERROR: ERROR: Invalid arithmetic expression.\n";
 	cout << "\n\tIt evaluates to " << sum << ".\n";
 }
 
