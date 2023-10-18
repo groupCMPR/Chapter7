@@ -77,75 +77,14 @@ void option1()
 //Postcondition: Output the converted infix expression into postfix expression
 void option2()
 {
-	Stack expression;
 	string infix = "";
 	string postFix = "";
-	string operatorPrecendence = "^/*+-"; //Trying out the operators
 	char choice = 'N';
-	int parenthesesCount = 0;
 	cout << "\n\t2> Translation of Arithmetic Expression";
 	cout << "\n\t" << string(100, char(196));
-	do
-	{
-		postFix = "";
-		infix = inputString("\n\tEnter an infix expression: ", true);
-
-		for (int i = 0; i < infix.length() + 1; i++)
-		{
-			infix[i]; //To see the current character
-
-			//Insert the values or variables
-			if ((isdigit(infix[i])) || (isalpha(infix[i])))
-			{
-				postFix += infix[i];
-			}
-			else if(infix[i] == '(')
-			{
-				//Push in the left parentheses and increase its counter
-				expression.push(infix[i]);
-				parenthesesCount++;
-			}
-			else if (infix[i] == ')')
-			{
-				//parenthesesCount should be greater than 0 to match the left parentheses
-				if(parenthesesCount == 0)
-				{
-					cout << "\n\tInfix expression  : " << infix;
-					cout << "\n\tPostfix expression: ERROR: inbalanced parentheses";
-					return;
-				}
-				//Decrease the parentheses counter
-				parenthesesCount--;
-				//Pop out the parentheses
-				expression.pop();
-			}
-			else 
-			{
-				//Testing precendence operators
-				/*while (!expression.isEmpty() && prec(infix[i]) <= prec(expression.top())) 
-				{
-					postFix += expression.top();
-					expression.pop();
-				}
-				expression.push(infix[i]);*/
-			}
-		}
-
-		//Checks if there is an extra or missing parentheses
-		if (parenthesesCount > 0 || parenthesesCount < 0)
-		{
-			cout << "\n\tInfix expression  : " << infix;
-			cout << "\n\tPostfix expression: ERROR: inbalanced parentheses";
-			return;
-		}
-
-		//Output the solved conversion of infix to postfix
-		cout << "\n\tInfix expression  : " << infix;
-		cout << "\n\tPostfix expression: " << postFix << '\n';
-
-		choice = inputChar("\n\tContinue a new expression? (Y-yes or N-no) ", static_cast<string>("YN"));
-
-	} while (choice != 'N');
+	infix = inputString("\n\tEnter an infix expression: ", true);
+	cout << "\n\tInfix expression  : " << infix;
+	cout << "\n\tPostfix expression: ERROR: inbalanced parentheses";
 }
 
 //Precondition : Called from main
