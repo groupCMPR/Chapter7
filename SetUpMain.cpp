@@ -93,30 +93,35 @@ void option2()
 		for (int i = 0; i < infix.length() + 1; i++)
 		{
 			infix[i]; //To see the current character
-			//For values or variables
+
+			//Insert the values or variables
 			if ((isdigit(infix[i])) || (isalpha(infix[i])))
 			{
 				postFix += infix[i];
 			}
 			else if(infix[i] == '(')
 			{
+				//Push in the left parentheses and increase its counter
 				expression.push(infix[i]);
 				parenthesesCount++;
 			}
 			else if (infix[i] == ')')
 			{
+				//parenthesesCount should be greater than 0 to match the left parentheses
 				if(parenthesesCount == 0)
 				{
 					cout << "\n\tInfix expression  : " << infix;
 					cout << "\n\tPostfix expression: ERROR: inbalanced parentheses";
 					return;
 				}
+				//Decrease the parentheses counter
 				parenthesesCount--;
+				//Pop out the parentheses
 				expression.pop();
 			}
 			else 
 			{
-
+				//Testing precendence operators
 				/*while (!expression.isEmpty() && prec(infix[i]) <= prec(expression.top())) 
 				{
 					postFix += expression.top();
@@ -125,12 +130,16 @@ void option2()
 				expression.push(infix[i]);*/
 			}
 		}
+
+		//Checks if there is an extra or missing parentheses
 		if (parenthesesCount > 0 || parenthesesCount < 0)
 		{
 			cout << "\n\tInfix expression  : " << infix;
 			cout << "\n\tPostfix expression: ERROR: inbalanced parentheses";
 			return;
 		}
+
+		//Output the solved conversion of infix to postfix
 		cout << "\n\tInfix expression  : " << infix;
 		cout << "\n\tPostfix expression: " << postFix << '\n';
 
