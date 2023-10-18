@@ -74,22 +74,25 @@ void option1()
 }
 
 //Precondition : Called from main
-//Postcondition: 
+//Postcondition: Output the converted infix expression into postfix expression
 void option2()
 {
 	Stack expression;
 	string infix = "";
 	string postFix = "";
+	string operatorPrecendence = "^/*+-"; //Trying out the operators
 	char choice = 'N';
-	bool correctParentheses = false;
+	int parenthesesCount = 0;
 	cout << "\n\t2> Translation of Arithmetic Expression";
 	cout << "\n\t" << string(100, char(196));
 	do
 	{
+		postFix = "";
 		infix = inputString("\n\tEnter an infix expression: ", true);
 
-		for (int i = 0; i < infix.length(); i++)
+		for (int i = 0; i < infix.length() + 1; i++)
 		{
+			infix[i]; //To see the current character
 			//For values or variables
 			if ((isdigit(infix[i])) || (isalpha(infix[i])))
 			{
@@ -98,29 +101,38 @@ void option2()
 			else if(infix[i] == '(')
 			{
 				expression.push(infix[i]);
-				correctParentheses = true;
+				parenthesesCount++;
 			}
 			else if (infix[i] == ')')
 			{
-				if (correctParentheses == false)
+				if(parenthesesCount == 0)
 				{
-					cout << "\n\tInfix expression: " << infix;
+					cout << "\n\tInfix expression  : " << infix;
 					cout << "\n\tPostfix expression: ERROR: inbalanced parentheses";
 					return;
 				}
-				while (expression.top() != '(')
+				parenthesesCount--;
+				expression.pop();
+			}
+			else 
+			{
+
+				/*while (!expression.isEmpty() && prec(infix[i]) <= prec(expression.top())) 
 				{
 					postFix += expression.top();
 					expression.pop();
 				}
-				expression.pop();
+				expression.push(infix[i]);*/
 			}
 		}
-
-		//cout << "\n\tInfix expression: )a + b*(c^d-e)^(f+g*h)-i";
-		cout << "\n\tPostfix expression: "; //ERROR: inbalanced parentheses
-
-
+		if (parenthesesCount > 0 || parenthesesCount < 0)
+		{
+			cout << "\n\tInfix expression  : " << infix;
+			cout << "\n\tPostfix expression: ERROR: inbalanced parentheses";
+			return;
+		}
+		cout << "\n\tInfix expression  : " << infix;
+		cout << "\n\tPostfix expression: " << postFix << '\n';
 
 		choice = inputChar("\n\tContinue a new expression? (Y-yes or N-no) ", static_cast<string>("YN"));
 
