@@ -77,10 +77,54 @@ void option1()
 //Postcondition: 
 void option2()
 {
+	Stack expression;
+	string infix = "";
+	string postFix = "";
+	char choice = 'N';
+	bool correctParentheses = false;
 	cout << "\n\t2> Translation of Arithmetic Expression";
 	cout << "\n\t" << string(100, char(196));
-	cout << "\n\tInfix expression: )a + b * (c^d - e)^(f + g * h) - i";
-	cout << "\n\tPostfix expression: "; //ERROR: inbalanced parentheses
+	do
+	{
+		infix = inputString("\n\tEnter an infix expression: ", true);
+
+		for (int i = 0; i < infix.length(); i++)
+		{
+			//For values or variables
+			if ((isdigit(infix[i])) || (isalpha(infix[i])))
+			{
+				postFix += infix[i];
+			}
+			else if(infix[i] == '(')
+			{
+				expression.push(infix[i]);
+				correctParentheses = true;
+			}
+			else if (infix[i] == ')')
+			{
+				if (correctParentheses == false)
+				{
+					cout << "\n\tInfix expression: " << infix;
+					cout << "\n\tPostfix expression: ERROR: inbalanced parentheses";
+					return;
+				}
+				while (expression.top() != '(')
+				{
+					postFix += expression.top();
+					expression.pop();
+				}
+				expression.pop();
+			}
+		}
+
+		//cout << "\n\tInfix expression: )a + b*(c^d-e)^(f+g*h)-i";
+		cout << "\n\tPostfix expression: "; //ERROR: inbalanced parentheses
+
+
+
+		choice = inputChar("\n\tContinue a new expression? (Y-yes or N-no) ", static_cast<string>("YN"));
+
+	} while (choice != 'N');
 }
 
 //Precondition : Called from main
