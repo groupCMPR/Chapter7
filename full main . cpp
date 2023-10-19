@@ -298,12 +298,6 @@ void option2()
 			cout << "\n\tPostfix expression: ERROR: inbalanced parentheses\n";
 			return;
 		}
-		if (!isArithmeticExpression(infix))
-		{
-			cout << "\n\tInfix expression  : " << infix;
-			cout << "\n\tPostfix expression: ERROR: invalid arithmetic expression\n";
-			return;
-		}
 
 		postfix = infixToPostfix(infix);
 
