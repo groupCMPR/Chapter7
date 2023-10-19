@@ -104,9 +104,9 @@ void Queen::set_Board() {
 
 				//moves Q over to next spot
 				if (iter != -1) {
-					board.pop();
 					board.push('_');
 				}
+
 				board.push('Q');
 
 				//refills top line
