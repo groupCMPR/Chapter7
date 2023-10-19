@@ -25,7 +25,6 @@ int precedence(char);
 string infixToPostfix(const string&);
 double evaluatePostfix(const string&);
 bool areParenthesesBalanced(const string&);
-bool isArithmeticExpression(const string&);
 
 //Option 2 - Translation of arithmetic expression
 void option2();
@@ -85,10 +84,6 @@ void option1()
 
 	if (!areParenthesesBalanced(infixExpression)) {
 		cout << "\n\t\tERROR: Parentheses don't match.\n";
-		return;
-	}
-	if (!isArithmeticExpression(infixExpression)) {
-		cout << "\n\t\tERROR: Invalid arithmetic expression.\n";
 		return;
 	}
 
@@ -241,36 +236,6 @@ bool areParenthesesBalanced(const string& expression) {
 	return characterStack.empty();
 }
 
-//Precondition : Accepts a const string 
-//Postcondition: checks to see if there are invalid arithmetic expression
-bool isArithmeticExpression(const string& expression) {
-	stack<char> characterStack;
-	int operatorsCount = 0;
-	for (char letter : expression) {
-		if(letter == '+' || letter == '-' || letter == '*' || letter == '/' || letter == '^')
-		{
-			operatorsCount++;
-			if(operatorsCount > 1)
-			{
-				if(letter == '-')
-				{
-					continue; //Negative value
-				}
-				else
-				{
-					return false;
-				}
-			}
-		}
-		else
-		{
-			operatorsCount--;
-		}
-	}
-	
-	return characterStack.empty();
-}
-
 //Precondition : Called from main
 //Postcondition: Output the converted infix expression into postfix expression
 void option2()
@@ -286,16 +251,10 @@ void option2()
 		infix = inputString("\n\tEnter an infix expression: ", true);
 
 		//Checks if there is an extra or missing parentheses
-		if (!areParenthesesBalanced(infix)) 
+		if (!areParenthesesBalanced(infix))
 		{
 			cout << "\n\tInfix expression  : " << infix;
 			cout << "\n\tPostfix expression: ERROR: inbalanced parentheses\n";
-			return;
-		}
-		if (!isArithmeticExpression(infix)) 
-		{
-			cout << "\n\tInfix expression  : " << infix;
-			cout << "\n\tPostfix expression: ERROR: invalid arithmetic expression\n";
 			return;
 		}
 
