@@ -1,6 +1,12 @@
 //Names: Alexis Martinez, Angie Campos, Neidy Malaga, & Vivian Huynh
 //Date: 10/4/2023
+// Groups:
+// option 1: Alexis
+// option 2: Alexis, Angie, Vivian
+// option 3: Neidy
 //Description: Chapter 7 Assignments - Applications using Stacks
+//We used stacks to simulate a basic calculutor, turn infix to postfix, and solve n-queens.
+//We used  backtracking and push to the top. 
 
 #include <iostream> //For cout
 #include <stack> //For stack
@@ -87,9 +93,8 @@ int precedence(char symbol) {
 		return 0;
 	}
 }
-
-//PreCondition: Accepts a const string data type
-//PostCondition: Converts this string into PostFix notation
+//Precondition : Accepts a const string data type
+//Postcondition: Converts this string into PostFix notation
 string infixToPostfix(const string& infix) {
 	stack<char> operators;
 	stringstream output;
@@ -98,7 +103,7 @@ string infixToPostfix(const string& infix) {
 	for (int i = 0; i < infix.size(); i++) {
 		char character = infix[i];
 
-		if (isdigit(character) || character == '.') {
+		if ((isdigit(character)) || (character == '.') || (isalpha(character))) {
 			output << character;
 			mightBeUnary = false;
 		}
@@ -147,9 +152,8 @@ string infixToPostfix(const string& infix) {
 
 	return output.str();
 }
-
-//PreCondition: Accepts a const string 
-//PostCondition: evaluates the postFix and returns a double 
+//Precondition : Accepts a const string 
+//Postcondition: evaluates the postFix and returns a double 
 double evaluatePostfix(const string& postfix) {
 	stack<double> values;
 	stringstream postFixStream(postfix);
@@ -184,8 +188,8 @@ double evaluatePostfix(const string& postfix) {
 	return values.top();
 }
 
-//PreCondition: Accepts a const string 
-//PostCondition: checks to see if the paranthesis are balanced in the expression
+//Precondition : Accepts a const string 
+//Postcondition: checks to see if the parentheses are balanced in the expression
 bool areParenthesesBalanced(const string& expression) {
 	stack<char> characterStack;
 	int count = 0;
@@ -238,6 +242,7 @@ bool isArithmeticExpression(const string& expression) {
 
 	return characterStack.empty();
 }
+
 
 //Precondition : Called from main
 //Postcondition: Calculate the arithmetic expression and output the solution
