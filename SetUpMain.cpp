@@ -240,9 +240,27 @@ bool areParenthesesBalanced(const string& expression) {
 ////Postcondition: checks to see if there are invalid arithmetic expression
 //bool isArithmeticExpression(const string& expression) {
 //	stack<char> characterStack;
-//  int doubleOperators;
+//  int operatorsCount = 0;
 //	for (char letter : expression) {
-//		
+//		if(letter == '+' || letter == '-' || letter == '*' || letter == '/' || letter == '^')
+//		{
+//			operatorsCount++;
+//			if(operatorsCount > 1)
+//			{
+//				if(letter == '-')
+//				{
+//					continue;
+//				}
+//				else
+//				{
+//					return false;
+//				}
+//			}
+//		}
+//		else
+//		{
+//			operatorsCount--;
+//		}
 //	}
 //	
 //	return characterStack.empty();
