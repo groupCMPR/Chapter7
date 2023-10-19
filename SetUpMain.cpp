@@ -3,10 +3,17 @@
 //Description: Chapter 7 Assignments - Applications using Stacks
 
 #include <iostream> //For cout
+#include <vector>   //For vector
 #include <iomanip>  //For formatting output
+#include <stack>    //For stack
+#include <string>   //For string
+#include <sstream>  //For stringstream
+#include <cctype>   //For isdigit, isalpha, & isspace
+#include <cmath>    //For math operators
 
 //HEADER FILES
 #include "input.h" //For input validation
+#include "Queen.h" //For option 3
 using namespace std;
 
 //PROTOTYPES
@@ -14,6 +21,10 @@ int mainMenu();
 
 //Option 1 - Simple Calculator
 void option1();
+int precedence(char);
+string infixToPostfix(const string&);
+double evaluatePostfix(const string&);
+bool areParenthesesBalanced(const string&);
 
 //Option 2 - Translation of arithmetic expression
 void option2();
@@ -63,38 +74,231 @@ int mainMenu()
 //Postcondition: Calculate the arithmetic expression and output the solution
 void option1()
 {
-	string arithExpression = "";
-	double solution = 0.0;
+	string infixExpression = "";
+	string postfixExpression = "";
+	double result = 0.0;
+
 	cout << "\n\t1> Simple Calculator";
 	cout << "\n\t" << string(100, char(196));
-	cout << "\n\tType a fully parenthesized arithmetic expression: ";
-	//cout << "\n\tERROR: Parentheses don't match.\n";
-	//cout << "\n\tERROR: ERROR: Invalid arithmetic expression.\n";
-	cout << "\n\tIt evaluates to " << solution << ".\n";
+	infixExpression = inputString("\n\t\tType a fully parenthesized arithmetic expression: \n\n\t\t", true);
+
+	if (!areParenthesesBalanced(infixExpression)) {
+		cout << "\n\t\tERROR: Parentheses don't match.\n";
+		return;
+	}
+
+	for (char letter : infixExpression) {
+		if (isalpha(letter)) {
+			cout << "\n\t\tERROR: Invalid arithmetic expression.\n";
+			return;
+		}
+	}
+
+	postfixExpression = infixToPostfix(infixExpression);
+	result = evaluatePostfix(postfixExpression);
+	cout << "\n\t\tIt evaluates to " << result << ".";
 }
+
+//Precondition : accepts a char data type
+//Postcondition: returns an integer symbolizing its precedence
+int precedence(char symbol) {
+	switch (symbol) {
+	case '+':
+	case '-':
+		return 1;
+	case '*':
+	case '/':
+		return 2;
+	case '^':
+		return 3;
+	default:
+		return 0;
+	}
+}
+//Precondition : Accepts a const string data type
+//Postcondition: Converts this string into PostFix notation
+string infixToPostfix(const string& infix) {
+	stack<char> operators;
+	stringstream output;
+	bool mightBeUnary = true; // is it a negative number or is it subtracting 
+
+	for (int i = 0; i < infix.size(); i++) {
+		char character = infix[i];
+
+		if ((isdigit(character)) || (character == '.') || (isalpha(character))) {
+			output << character;
+			mightBeUnary = false;
+		}
+		else if (character == '(') {
+			operators.push(character);
+			mightBeUnary = true;
+		}
+		else if (character == ')') {
+			while (!operators.empty() && operators.top() != '(') {
+				output << ' ' << operators.top();
+				operators.pop();
+			}
+			if (!operators.empty()) operators.pop();
+			mightBeUnary = false;
+		}
+		else if (character == '+' || character == '-' || character == '*' || character == '/' || character == '^') {
+			if (character == '-' && mightBeUnary) {
+				i++;
+				while (i < infix.size() && isspace(infix[i]))
+					i++;
+				while (i < infix.size() && (isdigit(infix[i]) || infix[i] == '.')) {
+					output << '-' << infix[i];
+					i++;
+				}
+				i--;
+				mightBeUnary = false;
+				continue;
+			}
+			output << ' ';
+			while (!operators.empty() && precedence(character) <= precedence(operators.top())) {
+				output << operators.top() << ' ';
+				operators.pop();
+			}
+			operators.push(character);
+			mightBeUnary = true;
+		}
+		else if (isspace(character)) {
+			continue;
+		}
+	}
+
+	while (!operators.empty()) {
+		output << ' ' << operators.top();
+		operators.pop();
+	}
+
+	return output.str();
+}
+
+//Precondition : Accepts a const string 
+//Postcondition: evaluates the postFix and returns a double 
+double evaluatePostfix(const string& postfix) {
+	stack<double> values;
+	stringstream postFixStream(postfix);
+	string token;
+
+	while (postFixStream >> token) {
+		if (isdigit(token[0]) || (token[0] == '-' && token.size() > 1)) {
+			values.push(stod(token));
+		}
+		else {
+			double val1 = values.top();
+			values.pop();
+
+			double val2 = 0;
+			if (!values.empty()) {
+				val2 = values.top();
+				values.pop();
+			}
+			if (token == "+")
+				values.push(val2 + val1);
+			else if (token == "-")
+				values.push(val2 - val1);
+			else if (token == "*")
+				values.push(val2 * val1);
+			else if (token == "/")
+				values.push(val2 / val1);
+			else if (token == "^")
+				values.push(pow(val2, val1));
+		}
+	}
+
+	return values.top();
+}
+
+//Precondition : Accepts a const string 
+//Postcondition: checks to see if the parentheses are balanced in the expression
+bool areParenthesesBalanced(const string& expression) {
+	stack<char> characterStack;
+	int count = 0;
+
+	for (char letter : expression) {
+		if (letter == '(') {
+			characterStack.push(letter);
+			count++;
+		}
+		else if (letter == ')') {
+			if (characterStack.empty()) {
+				return false;
+			}
+			characterStack.pop();
+			count++;
+		}
+	}
+	if (count == 0) {
+		return false;
+	}
+	return characterStack.empty();
+}
+
+////Precondition : Accepts a const string 
+////Postcondition: checks to see if there are invalid arithmetic expression
+//bool isArithmeticExpression(const string& expression) {
+//	stack<char> characterStack;
+//  int doubleOperators;
+//	for (char letter : expression) {
+//		
+//	}
+//	
+//	return characterStack.empty();
+//}
 
 //Precondition : Called from main
 //Postcondition: Output the converted infix expression into postfix expression
 void option2()
 {
 	string infix = "";
-	string postFix = "";
+	string postfix = "";
 	char choice = 'N';
 	cout << "\n\t2> Translation of Arithmetic Expression";
 	cout << "\n\t" << string(100, char(196));
-	infix = inputString("\n\tEnter an infix expression: ", true);
-	cout << "\n\tInfix expression  : " << infix;
-	cout << "\n\tPostfix expression: ERROR: inbalanced parentheses";
+	do
+	{
+		postfix = "";
+		infix = inputString("\n\tEnter an infix expression: ", true);
+
+		//Checks if there is an extra or missing parentheses
+		if (!areParenthesesBalanced(infix)) {
+			cout << "\n\tInfix expression  : " << infix;
+			cout << "\n\tPostfix expression: ERROR: inbalanced parentheses";
+			return;
+		}
+
+		postfix = infixToPostfix(infix);
+
+		//Output the solved conversion of infix to postfix
+		cout << "\n\tInfix expression  : " << infix;
+		cout << "\n\tPostfix expression: " << postfix << '\n';
+
+		choice = inputChar("\n\tContinue a new expression? (Y-yes or N-no) ", static_cast<string>("YN"));
+
+	} while (choice != 'N');
 }
 
 //Precondition : Called from main
-//Postcondition:
+//Postcondition: lets user chose a part in N-Queens and then solves the game
 void option3()
 {
-	cout << "\n\t3> n-Queens Problem";
+	Queen puzzle;
 	int numberOfQueens = 0;
-	numberOfQueens = inputInteger("\n\tEnter a number(1...100) of queens: ", 1, 100);
-	
 	int column = 0;
+
+	cout << "\n\t3> n-Queens Problem";
+	numberOfQueens = inputInteger("\n\tEnter a number(1...100) of queens: ", 1, 100);
+	puzzle.set_Size(numberOfQueens);
 	column = inputInteger("\n\tEnter the column(1.." + to_string(numberOfQueens) + ") to place the first queen : ", 1, numberOfQueens);
+	puzzle.set_Line(column - 1);
+
+	if (numberOfQueens == 2 || numberOfQueens == 3) {
+		cout << "\n\tNo solution.";
+		return;
+	}
+
+	puzzle.set_Board();
+	cout << puzzle;
 }
