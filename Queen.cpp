@@ -98,7 +98,7 @@ void Queen::set_Board() {
 
 			//if popped the top row, refills line
 			if (iter < size) {
-				//pops '_' if there was a Q in the last column of top rown
+				//pops '_' if there was a Q in the last column of top row
 				// else pops 'Q' 
 				board.pop();
 
@@ -110,7 +110,7 @@ void Queen::set_Board() {
 				board.push('Q');
 
 				//refills top line
-				for (++iter; iter < size - 1; ++iter) {
+				for (++iter; iter < size; ++iter) {
 					board.push('_');
 				}
 			}
