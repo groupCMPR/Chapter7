@@ -5,8 +5,9 @@ Queen::Queen() {
 	size = 0;
 }
 
-//MUTATORS:-----------------------------------------------------------
-
+//---------------------------------------------------------------------
+//							MUTATORS
+//---------------------------------------------------------------------
 //Precondition: int newSize
 //Postcondition: set size of board (sizexsize)
 void Queen::set_Size(const int& newSize) {
@@ -74,62 +75,7 @@ void Queen::set_Board() {
 			pos_check -= size;
 		}
 
-		if (!success && column_check) {
-
-			//pops until the q
-			while (true) {
-				board.pop();
-				--iter;
-				if (board._Get_container().at(iter) == 'Q')
-					break;
-			}
-
-
-			//if popping stack at less than size, pops everything, and refills everything
-			//with a readjusted Q in the correct position
-			//else if last Q is at the end of the stack column, erases everything except previous Q, then pops that Q and pushes _ 
-			//else pops the placeholder and pushes Q
-			if (iter + 1 == size) {
-				int position = 0;
-
-				for (int i = size - 1; i > -1; --i) {
-					if (board._Get_container().at(i)) {
-						if ( (i + 1) % size == 0)
-							position = 0;
-						else
-							position = i + 1;
-					}
-					board.pop();
-				}
-				for (int i = 0; i < size; ++i) {
-					if (position == i) {
-						board.push('Q');
-					}
-					else
-						board.push('_');
-				
-				}
-			}
-			else if ((iter + 1) % size == 0) {
-				while (true) {
-					board.pop();
-					--iter;
-					if (board._Get_container().at(iter) == 'Q')
-						break;
-				}
-
-				board.pop();
-				board.push('_');
-			}
-			else {
-				board.pop();
-				board.push('_');
-			}
-
-			column_check = false; 
-
-		}
-		else if (success) {
+		if (success) {
 			board.pop();
 			board.push('Q');
 
@@ -138,6 +84,43 @@ void Queen::set_Board() {
 				board.push('_');
 
 			column_check = false;
+		}
+		else if (column_check) {
+
+			//pops until Q, or if there is a Q in the last column, erases inot next Q
+			for (--iter; iter > -1; --iter) {
+				board.pop();
+				if (board._Get_container().at(iter) == 'Q') {
+					if ((iter + 1) % size != 0)
+						break;
+				}
+			}
+
+			//if popped the top row, refills line
+			if (iter < size) {
+				//pops '_' if there was a Q in the last column of top rown
+				// else pops 'Q' 
+				board.pop();
+
+				//moves Q over to next spot
+				if (iter != -1) {
+					board.pop();
+					board.push('_');
+				}
+				board.push('Q');
+
+				//refills top line
+				for (++iter; iter < size - 1; ++iter) {
+					board.push('_');
+				}
+			}
+			else {
+				board.pop();
+				board.push('_');
+			}
+
+			column_check = false; 
+
 		}
 	}
 }
@@ -156,7 +139,7 @@ ostream& operator<< (ostream& out, const Queen& obj) {
 	//top of board:
 	out << "\n\t" << char(201) << string((obj.size * 2 - 1), char(205)) << char(187) << "\n\t";
 
-	//middle of board: char and side |
+	//middle of board:
 	for (auto iter = obj.board._Get_container().begin(); iter != obj.board._Get_container().end(); ++iter, ++i) {
 
 		if (i == 1 || i % obj.size == 1)
